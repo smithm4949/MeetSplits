@@ -1,0 +1,126 @@
+{
+  "openEvents": [
+    10000, 5000, 3200, 3000, 1609, 1600, 1500, 800, 500, 400, 300, 200, 100, 60,
+    55
+  ],
+  "relayEvents": [
+    {
+      "name": "DMR (12-4-8-16)",
+      "legs": [1200, 400, 800, 1600]
+    },
+    {
+      "name": "SMR (1-1-2-4)",
+      "legs": [100, 100, 200, 400]
+    },
+    {
+      "name": "SMR (2-1-1-4)",
+      "legs": [200, 100, 100, 400]
+    },
+    {
+      "name": "SMR (2-2-4-8)",
+      "legs": [200, 200, 400, 800]
+    },
+    {
+      "name": "4x100",
+      "legs": [100, 100, 100, 100]
+    },
+    {
+      "name": "4x200",
+      "legs": [200, 200, 200, 200]
+    },
+    {
+      "name": "4x400",
+      "legs": [400, 400, 400, 400]
+    },
+    {
+      "name": "4x800",
+      "legs": [800, 800, 800, 800]
+    },
+    {
+      "name": "4x1500",
+      "legs": [1500, 1500, 1500, 1500]
+    },
+    {
+      "name": "4xMile",
+      "legs": [1609, 1609, 1609, 1609]
+    }
+  ],
+  "athletes": [
+    {
+      "name": "Nate Bazemore",
+      "grade": "12"
+    },
+    {
+      "name": "Milo Borek",
+      "grade": "12"
+    },
+    {
+      "name": "Bryan Chapman",
+      "grade": "12"
+    },
+    {
+      "name": "Luke Cohen",
+      "grade": "12"
+    },
+    {
+      "name": "Sadie Foer",
+      "grade": "12"
+    },
+    {
+      "name": "Christian Freeman",
+      "grade": "12"
+    },
+    {
+      "name": "Alana Goldstock",
+      "grade": "12"
+    },
+    {
+      "name": "Pilar Holder ",
+      "grade": "12"
+    },
+    {
+      "name": "Ben Meyer",
+      "grade": "12"
+    },
+    {
+      "name": "Roshan Natarajan",
+      "grade": "12"
+    },
+    {
+      "name": "Daniel Otto-Manzano",
+      "grade": "12"
+    },
+    {
+      "name": "Shiv Raman",
+      "grade": "12"
+    },
+    {
+      "name": "Noor Ramzy",
+      "grade": "12"
+    },
+    {
+      "name": "Cameron Salehizadeh",
+      "grade": "12"
+    },
+    {
+      "name": "Lina Stensland",
+      "grade": "12"
+    },
+    {
+      "name": "Ashok Tate",
+      "grade": "12"
+    },
+    {
+      "name": "Ethan Wolin",
+      "grade": "12"
+    }
+  ],
+  "meets": [
+    {
+      "name": "Draper Invitational",
+      "location": "St. Stephen's and St. Agnes School",
+      "trackLength": 400,
+      "date": "May 5-6, 2023"
+    }
+  ]
+}
