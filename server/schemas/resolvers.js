@@ -1,7 +1,7 @@
 const { AuthenticationError } = require('apollo-server-express');
 const { signToken } = require('../utils/auth');
 // import models
-const { User } = require('../models');
+const { User, Athlete } = require('../models');
 
 // define our resolvers
 const resolvers = {
@@ -12,6 +12,15 @@ const resolvers = {
     },
     user: async (parent, { email }) => {
       return User.findOne({ email });
+    },
+    me: async (parent, args, context) => {
+      if (context.user) {
+        return User.findOne({ _id: context.user._id });
+      }
+      throw new AuthenticationError('You need to be logged in!');
+    },
+    athletes: async (parent, { team }, context) => {
+      return Athlete.find({ team });
     }
   },
 
