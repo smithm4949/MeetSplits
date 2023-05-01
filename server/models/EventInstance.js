@@ -44,7 +44,15 @@ const eventInstanceSchema = new Schema({
           ],
           splitTimes: [
             {
-              type: Date
+              dateTime: {
+                type: Date
+              },
+              elapsedTime: {
+                type: Number
+              },
+              split: {
+                type: Number
+              }
             }
           ]
         }
