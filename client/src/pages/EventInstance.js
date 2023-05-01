@@ -1,100 +1,140 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom';
+import { useMutation, useQuery } from '@apollo/client';
 
-import { useMutation } from '@apollo/client';
-import { ADD_USER } from '../utils/mutations';
+import { QUERY_EVENT_INSTANCE } from '../utils/queries';
+import { ADD_SPLITS } from '../utils/mutations';
 
-import Auth from '../utils/auth';
+import EntrantList from '../components/EntrantList';
+import HeatTabs from '../components/HeatTabs';
 
-const Signup = () => {
-  const [formState, setFormState] = useState({
-    name: '',
-    email: '',
-    password: '',
+const EventInstance = (props) => {
+ 
+  // if not logged in, redirect home
+
+  // use a query to check if there is already an event instance
+  // if no, create and open 'add heat' component in model
+
+  const [startTime, setStartTime] = useState(null);
+  const [addSplits, { error }] = useMutation(ADD_SPLITS);
+  const [timerDisplay, setTimerDisplay] = useState('00:00:00');
+  let timerInterval;
+  let numEntrantsFinished = 0;
+
+  const { heatIndex } = useSearchParams();
+  const { eventId } = useParams();
+
+  const teamId = "64501bad858de65a741e37c8";
+  //for each heat, make a tab
+  //setup heats[heatId]
+
+  const {
+    loading: eventLoading,
+    error: eventError,
+    data: eventData
+  } = useQuery(QUERY_EVENT_INSTANCE, {
+    variables: { eventId, teamId },
   });
-  const [addUser, { error, data }] = useMutation(ADD_USER);
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
+  const event = eventData?.eventInstance || {};
+  let currentHeat = heatIndex || 0;
 
-    setFormState({
-      ...formState,
-      [name]: value,
-    });
-  };
-
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
-    console.log(formState);
-
+  async function handleEntrantFinish(heatIndex, entrantIndex, splitsArray) {
+    //save splits for entrants in parent state
+    
+    // call mutation to save info, refresh page
+    event.heats[currentHeat].entrants[entrantIndex].splitTimes = splitsArray;
+    numEntrantsFinished++;
+    if (numEntrantsFinished === event.entrants.length) {
+      clearInterval(timerInterval);
+    }
     try {
-      const { data } = await addUser({
-        variables: { ...formState },
+      const { data } = await addSplits({
+        variables: { eventId, splitsArray, heatIndex, entrantIndex },
       });
-
-      Auth.login(data.addUser.token);
     } catch (e) {
       console.error(e);
     }
-  };
+
+  }
+
+  function handleStartHeat() {
+    setStartTime(new Date());
+    startTimer();
+  }
+
+  
+  function startTimer() {
+
+    clearInterval(timerInterval);
+    timerInterval = setInterval(updateTimer, 10);
+
+    function updateTimer () {
+      let timerString = '';
+      let currentTime = new Date();
+      let elapsedTime = currentTime - startTime;
+      
+      let minutes = Math.floor(elapsedTime / 60000);
+      let seconds = Math.floor((elapsedTime%60000) / 1000);
+      let milliseconds = elapsedTime%1000;
+      
+      if(minutes <= 9){
+        timerString += `0${minutes}:`;
+      }
+      else if (minutes > 9){
+        timerString += `${minutes}:`;
+      }
+
+      if(seconds <= 9){
+        timerString += `0${seconds}:`;
+      }
+      else if (seconds > 9){
+        timerString += `${seconds}:`;
+      }
+      
+      if(milliseconds <= 9){
+        timerString += `0${milliseconds}`;
+      }
+      else if (milliseconds > 9){
+        timerString += `${milliseconds}`;
+      }
+      setTimerDisplay(timerString);
+    }
+
+  }
+  //const entrants = event.heats[currentHeat].entrants;
+
+  if (eventLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <main className="flex-row justify-center mb-4">
+    <main className="flex-row justify-center">
       <div className="col-12 col-lg-10">
-        <div className="card">
-          <h4 className="card-header bg-dark text-light p-2">Sign Up</h4>
-          <div className="card-body">
-            {data ? (
-              <p>
-                Success! You may now head{' '}
-                <Link to="/">back to the homepage.</Link>
-              </p>
-            ) : (
-              <form onSubmit={handleFormSubmit}>
-                <input
-                  className="form-input"
-                  placeholder="Your name"
-                  name="name"
-                  type="text"
-                  value={formState.name}
-                  onChange={handleChange}
-                />
-                <input
-                  className="form-input"
-                  placeholder="Your email"
-                  name="email"
-                  type="email"
-                  value={formState.email}
-                  onChange={handleChange}
-                />
-                <input
-                  className="form-input"
-                  placeholder="******"
-                  name="password"
-                  type="password"
-                  value={formState.password}
-                  onChange={handleChange}
-                />
-                <button
-                  className="btn btn-block btn-primary"
-                  style={{ cursor: 'pointer' }}
-                  type="submit"
-                >
-                  Submit
-                </button>
-              </form>
-            )}
-
-            {error && (
-              <div className="my-3 p-3 bg-danger text-white">
-                {error.message}
-              </div>
-            )}
-          </div>
+        <div className="row">
+          <HeatTabs
+            heats={event.heats}
+            eventId={event.meetEvent}
+          />
+        </div>
+        <div className="row">
+          {timerDisplay}
+        </div>
+        <div className="row">
+          <EntrantList
+            entrants={event.heats[currentHeat].entrants}
+            handleEntrantFinish={handleEntrantFinish}
+            numSplits={event.legs.length}
+            heatIndex={currentHeat}
+            startTime={startTime}
+          />
+          <button onClick={handleStartHeat}>
+            Start Race
+          </button>
         </div>
       </div>
     </main>
   );
 };
 
-export default Signup;
+export default EventInstance;

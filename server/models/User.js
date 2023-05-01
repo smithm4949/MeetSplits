@@ -19,6 +19,10 @@ const userSchema = new Schema({
     minlength: 8,
     maxlength: 32
   },
+  team: {
+    type: Schema.Types.ObjectId,
+    ref: 'Team'
+  }
 });
 
 // set up pre-save middleware to create password

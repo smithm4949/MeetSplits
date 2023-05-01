@@ -3,7 +3,6 @@ const { Schema, model } = require('mongoose');
 const eventInstanceSchema = new Schema({
   name: {
     type: String,
-    required: true,
     trim: true,
   },
   legs: [
@@ -42,7 +41,7 @@ const eventInstanceSchema = new Schema({
               ref: 'Athlete'
             }
           ],
-          splitTimes: [
+          splits: [
             {
               dateTime: {
                 type: Date

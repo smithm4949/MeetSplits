@@ -6,9 +6,12 @@ import { setContext } from '@apollo/client/link/context';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import EventInstance from './pages/EventInstance';
 import NotFound from './pages/NotFound';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import Events from './pages/Events';
+import Meets from './pages/Meets';
 
 // Construct our main GraphQL API endpoint
 const httpLink = createHttpLink({
@@ -50,11 +53,23 @@ function App() {
               <Route 
                   path="/login" 
                   element={<Login />} 
-                />
-                <Route 
-                  path="/signup" 
-                  element={<Signup />} 
-                />
+              />
+              <Route 
+                path="/signup" 
+                element={<Signup />} 
+              />
+              <Route 
+                path="/events" 
+                element={<Events />}
+              />
+              <Route 
+                path="/meets" 
+                element={<Meets />}
+              />
+              <Route 
+                path="/events/:eventId" 
+                element={<EventInstance />}
+              />
               <Route 
                 path="*"
                 element={<NotFound />}

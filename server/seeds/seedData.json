@@ -122,5 +122,25 @@
       "trackLength": 400,
       "date": "May 5-6, 2023"
     }
+  ],
+  "meetEvents": [
+    {
+      "name": "Open Mile",
+      "legs": [400, 400, 400, 400],
+      "distance": 1600
+    }
+  ],
+  "eventInstances": [
+    {
+      "name": "Open Mile",
+      "legs": [400, 400, 400, 400],
+      "distance": 1600
+    }
+  ],
+  "teams": [
+    {
+      "name": "Georgetown Day School",
+      "abbreviation": "GDS"
+    }
   ]
 }

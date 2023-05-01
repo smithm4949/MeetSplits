@@ -1,7 +1,7 @@
 const { AuthenticationError } = require('apollo-server-express');
 const { signToken } = require('../utils/auth');
 // import models
-const { User, Athlete } = require('../models');
+const { User, Meet, Athlete, EventInstance } = require('../models');
 
 // define our resolvers
 const resolvers = {
@@ -21,7 +21,20 @@ const resolvers = {
     },
     athletes: async (parent, { team }, context) => {
       return Athlete.find({ team });
-    }
+    },
+    events:  async () => {
+      return EventInstance.find();
+    },
+    meets: async () => {
+      return Meet.find();
+    },
+    eventInstance: async (parent, { eventId, teamId }) => {
+      let foundEvent = await EventInstance.findOne({ team: teamId, meetEvent: eventId });
+      if (!foundEvent) {
+        foundEvent = await EventInstance.create({meetEvent: eventId, team: teamId});
+      }
+      return foundEvent;
+    },
   },
 
   // mutations (write operations)
@@ -48,6 +61,14 @@ const resolvers = {
 
       return { token, user };
     },
+    addSplits: async(parent, { eventId, heatIndex, entrantIndex, splitsArray }) => {
+      const singleEvent = await EventInstance.findById(eventId);
+      singleEvent.heats[heatIndex].entrants[entrantIndex].splits = splitsArray;
+      const updatedEvent = await EventInstance.findByIdAndUpdate(eventId, {
+        heats: singleEvent.heats
+      })
+      return updatedEvent;
+    }
 
   },
 };

@@ -15,14 +15,17 @@ const Header = () => {
           <Link className="text-light" to="/">
             <h1 className="m-0">Home</h1>
           </Link>
+          <Link className="btn btn-lg btn-info m-2" to="/events">
+            View Events
+          </Link>
+          <Link className="btn btn-lg btn-light m-2" to="/meets">
+            View Meets
+          </Link>
           <p className="m-0">Track App!</p>
         </div>
         <div>
           {Auth.loggedIn() ? (
             <>
-              <Link className="btn btn-lg btn-info m-2" to="/me">
-                {Auth.getProfile().data.name}'s profile
-              </Link>
               <button className="btn btn-lg btn-light m-2" onClick={logout}>
                 Logout
               </button>
